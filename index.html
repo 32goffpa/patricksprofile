@@ -1,1 +1,560 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System Settings</title>
+<style>
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  color: #171719;
+  --blue: #3478f6;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #111;
+  display: grid;
+  place-items: center;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+.app {
+  width: min(1144px, 100vw);
+  height: min(1000px, 100vh);
+  min-height: 640px;
+  background: white;
+  border: 2px solid #c9c9c9;
+  border-radius: 25px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+}
+.sidebar {
+  background: #ecebea;
+  border-right: 1px solid #d8d8d8;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 14px 8px;
+  overflow: hidden;
+}
+.traffic {
+  height: 62px;
+  display: flex;
+  gap: 14px;
+  padding: 11px 14px 0;
+}
+.traffic span {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+.red { background: #ff605c; }
+.yellow { background: #ffbd44; }
+.green { background: #00ca4e; }
+.search-wrap { position: relative; margin: 14px 0 16px; }
+.search {
+  height: 46px;
+  width: 100%;
+  border: 1px solid #d5d5d5;
+  border-radius: 25px;
+  background: linear-gradient(#f8f8f8, #e9e9e9);
+  padding: 0 14px;
+  font-size: 20px;
+  outline: none;
+}
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 4px 12px 22px;
+}
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(#55466f, #f5a080, #f4d4a2);
+  border: 1px solid #d6d6d6;
+}
+.profile-name { font-size: 20px; font-weight: 650; }
+.profile-sub { font-size: 17px; color: #666; margin-top: 2px; }
+.nav { overflow: auto; min-height: 0; scrollbar-width: none; }
+.nav-group { margin-bottom: 19px; }
+.nav-item {
+  width: 100%;
+  height: 47px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 5px 12px;
+  margin: 2px 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  text-align: left;
+  font-size: 20px;
+  color: #111;
+  white-space: nowrap;
+}
+.nav-item:hover { background: #ffffff8c; }
+.nav-item.active { background: var(--blue); color: white; font-weight: 650; }
+.nav-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: 21px;
+  flex-shrink: 0;
+}
+.content { min-width: 0; overflow: auto; background: white; }
+.topbar {
+  height: 82px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  padding: 0 13px;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  background: #ffffffed;
+  backdrop-filter: blur(18px);
+  z-index: 5;
+}
+.backgroup {
+  height: 54px;
+  width: 117px;
+  border: 1px solid #e3e3e3;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-shrink: 0;
+}
+.backgroup button {
+  border: 0;
+  background: transparent;
+  font-size: 34px;
+  color: #444;
+}
+.backgroup button:disabled { color: #bcbcbc; }
+.page-title { font-size: 24px; font-weight: 700; }
+.page { padding: 24px 30px 36px; }
+.page h1 { font-size: 27px; margin: 0 0 7px; }
+.subtitle { font-size: 14px; color: #777; margin-bottom: 20px; }
+.section-title { font-size: 20px; font-weight: 650; margin: 31px 0 15px; }
+.section-head { display: flex; align-items: center; justify-content: space-between; }
+.show-all { border: 0; background: transparent; color: #858585; }
+.wallpaper-top {
+  display: grid;
+  grid-template-columns: minmax(150px, 253px) minmax(0, 1fr);
+  gap: 16px;
+  margin-bottom: 35px;
+}
+.hero-art {
+  height: 158px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #3e3841, #f1dfc0 25%, #645c5c 45%, #242941 75%, #d0d7d9);
+  position: relative;
+  overflow: hidden;
+}
+.hero-art:after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: linear-gradient(145deg, transparent 25%, #e9d7bb 27%, #817568 32%, #fff0d7 35%, transparent 40%, #d7c3a6 46%, #3d3c4c 54%, transparent 60%);
+}
+.feature-controls { background: #f6f6f6; border-radius: 18px; padding: 0 16px; }
+.feature-line {
+  height: 59px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid #e1e1e1;
+  font-size: 18px;
+}
+.feature-line:last-child { border: 0; }
+.feature-line select { max-width: 100px; border: 0; background: transparent; }
+.switch {
+  width: 57px;
+  height: 29px;
+  border: 0;
+  border-radius: 20px;
+  background: #d1d1d6;
+  padding: 3px;
+  flex-shrink: 0;
+  transition: background .16s;
+}
+.switch:after {
+  content: "";
+  display: block;
+  width: 23px;
+  height: 23px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px #0003;
+  transition: transform .17s;
+}
+.switch.on { background: #3478f6; }
+.switch.on:after { transform: translateX(28px); }
+.feature-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 15px; }
+.feature-actions button, .action-btn {
+  background: #ededed;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 13px;
+}
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+.wall-card {
+  padding: 0;
+  min-width: 0;
+  border: 2px solid transparent;
+  border-radius: 9px;
+  overflow: hidden;
+  background: white;
+  color: #222;
+  text-align: center;
+}
+.wall-card:hover { transform: translateY(-2px); }
+.wall-card.selected { border-color: #3478f6; }
+.wall-art { height: 112px; position: relative; overflow: hidden; border-radius: 6px; }
+.gold { background: linear-gradient(135deg, #7c6d5a, #f1dfc0 24%, #72685e 36%, #222840 62%, #8d9baa); }
+.tahoe { background: linear-gradient(#9ac8e7, #f4d5b2 45%, #4ca9d1 50%, #164eac); }
+.sequoia { background: linear-gradient(120deg, #f7a6ac, #ed6e9f 30%, #5e54c8 65%, #36a8c4); }
+.macintosh { background: repeating-linear-gradient(130deg, #ccc 0 12px, #888 13px 15px, #ccc 16px 29px); }
+.sunset { background: linear-gradient(#4d5683, #f8a67d 48%, #e9b88b 54%, #566477 55%, #21354d); }
+.ocean { background: linear-gradient(#5288b8, #e5c8a6 45%, #2c9db9 47%, #174c76); }
+.forest { background: repeating-linear-gradient(85deg, #d9c8a1 0 15px, #547d65 16px 22px, #d9c8a1 23px 37px); }
+.mountain { background: linear-gradient(#a7c8e2, #f4d7bd 54%, #789a9d); }
+.wall-name { padding: 7px 3px 3px; font-size: 15px; }
+.photo-tile {
+  width: 170px;
+  height: 112px;
+  border: 0;
+  border-radius: 8px;
+  background: #f3f3f3;
+  color: #888;
+  font-size: 15px;
+}
+.settings-card { background: #f6f6f6; border-radius: 15px; overflow: hidden; }
+.setting-row {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 17px;
+  border-bottom: 1px solid #e1e1e1;
+}
+.setting-row:hover { background: #eeeeee; }
+.setting-copy { flex: 1; }
+.setting-name { font-size: 17px; }
+.setting-desc { font-size: 12px; color: #777; margin-top: 4px; }
+.control { max-width: 160px; border: 1px solid #d7d7d7; border-radius: 8px; background: white; padding: 8px; }
+.range { width: 115px; accent-color: #3478f6; }
+.note { background: #edf4ff; border-radius: 10px; padding: 12px; font-size: 12px; color: #45618d; margin-top: 16px; }
+@media(max-width:850px) {
+  .app { grid-template-columns: 255px minmax(0,1fr); height: 100vh; border-radius: 0; }
+  .sidebar { padding: 12px 9px; }
+  .nav-item { font-size: 15px; height: 40px; gap: 10px; }
+  .page { padding: 20px 18px; }
+  .wallpaper-top { grid-template-columns: 1fr; }
+  .gallery { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:540px) {
+  .app { grid-template-columns: 62px minmax(0,1fr); }
+  .profile { justify-content: center; padding: 0 0 14px; }
+  .avatar { width: 37px; height: 37px; }
+  .profile-copy, .nav-text { display: none; }
+  .nav-item { justify-content: center; padding: 4px 0; height: 37px; }
+  .nav-icon { width: 28px; height: 28px; }
+  .page { padding: 16px 12px; }
+  .topbar { height: 60px; gap: 8px; }
+  .backgroup { width: 76px; height: 40px; }
+  .hero-art { height: 105px; }
+  .wall-art { height: 68px; }
+  .feature-actions button { font-size: 11px; padding: 8px 6px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="traffic"><span class="red"></span><span class="yellow"></span><span class="green"></span></div>
+    <div class="search-wrap">
+      <input class="search" id="search" placeholder="⌕  Search" aria-label="Search settings">
+      <div id="results" style="display:none;position:absolute;z-index:20;left:0;right:0;background:#fff;border-radius:12px;box-shadow:0 8px 24px #0003"></div>
+    </div>
+    <div class="profile">
+      <div class="avatar"></div>
+      <div class="profile-copy"><div class="profile-name">Danny Rico</div><div class="profile-sub">Apple Account</div></div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+  </aside>
+  <main class="content">
+    <header class="topbar">
+      <div class="backgroup"><button id="back" disabled>‹</button><button id="forward" disabled>›</button></div>
+      <div class="page-title" id="topTitle">Wallpaper</div>
+    </header>
+    <div class="page" id="page"></div>
+  </main>
+</div>
+<script>
+const groups = [
+  [["Wi-Fi","⌁","#398df3"],["Bluetooth","ᛒ","#398df3"],["Network","◎","#398df3"],["VPN","◎","#398df3"],["Battery","▰","#64c76c"]],
+  [["General","⚙","#8f9298"],["Accessibility","♙","#378cf3"],["Appearance","◐","#08090a"],["Desktop & Dock","▣","#25272b"],["Displays","☼","#378cf3"],["Menu Bar","☷","#93969c"],["Siri","◒","#999"],["Spotlight","⌕","#92969e"],["Wallpaper","❀","#4cb6e8"],["Screen Saver","◌","#4c9ebc"],["Notifications","▣","#eea13a"],["Sound","◖","#e9a13a"],["Focus","◐","#7766e8"],["Screen Time","◷","#8e70df"],["Apple Intelligence","✦","#8e65d8"],["Lock Screen","▣","#7d8ba1"],["Privacy & Security","▤","#5b9b7a"],["Touch ID & Password","◉","#777d8a"],["Users & Groups","♙","#6f91cf"],["Internet Accounts","◎","#6e9bd4"],["Game Center","♧","#8e70d9"],["Keyboard","⌨","#9296a0"],["Trackpad","▱","#9296a0"],["Mouse","⌖","#9296a0"],["Printers & Scanners","▤","#9296a0"],["Storage","▥","#8e95a1"],["Time Machine","◴","#6b9ad4"],["Date & Time","◷","#858b96"],["Language & Region","文","#9296a0"],["Sharing","↗","#6d9cce"],["Software Update","↓","#5e9dce"]]
+];
+const descriptions = {
+  "Wi-Fi":"Connect to a wireless network.","Bluetooth":"Connect accessories and nearby devices.",
+  "Network":"Manage network services and connections.","VPN":"Manage VPN configurations.",
+  "Battery":"View battery and power settings.","General":"Review general system settings.",
+  "Accessibility":"Customize accessibility features.","Appearance":"Customize the appearance of your Mac.",
+  "Desktop & Dock":"Customize your desktop and Dock.","Displays":"Adjust display settings.",
+  "Menu Bar":"Choose menu bar controls.","Siri":"Configure Siri settings.",
+  "Spotlight":"Manage search results.","Wallpaper":"Choose a desktop wallpaper.",
+  "Screen Saver":"Choose a screen saver.","Notifications":"Manage app notifications.",
+  "Sound":"Configure sound input and output.","Focus":"Choose a Focus mode.",
+  "Screen Time":"Review app usage.","Apple Intelligence":"Manage intelligent features.",
+  "Lock Screen":"Configure lock screen behavior.","Privacy & Security":"Manage app permissions and security.",
+  "Touch ID & Password":"Manage authentication options.","Users & Groups":"Manage user accounts.",
+  "Internet Accounts":"Manage online accounts.","Game Center":"Manage gaming preferences.",
+  "Keyboard":"Adjust keyboard settings.","Trackpad":"Configure gestures and tracking.",
+  "Mouse":"Adjust pointer and scrolling.","Printers & Scanners":"Manage printers.",
+  "Storage":"Review storage usage.","Time Machine":"Configure backup options.",
+  "Date & Time":"Configure date and time.","Language & Region":"Configure language and region.",
+  "Sharing":"Choose services this Mac can share."
+};
+const items = groups.flat();
+const state = {};
+let current = "Wallpaper", history = ["Wallpaper"], historyIndex = 0;
+const $ = id => document.getElementById(id);
+const findItem = n => items.find(x => x[0] === n) || ["","◦","#888"];
+function buildNav() {
+  $("nav").innerHTML = groups.map(group => `<div class="nav-group">${group.map(([name,symbol,color]) =>
+    `<button class="nav-item ${name===current?"active":""}" data-page="${name}">
+      <span class="nav-icon" style="background:${color}">${symbol}</span><span class="nav-text">${name}</span>
+    </button>`).join("")}</div>`).join("");
+  $("nav").querySelectorAll("[data-page]").forEach(b => b.onclick = () => go(b.dataset.page));
+}
+function go(name, push=true) {
+  if (!descriptions[name]) return;
+  if (push && name !== current) {
+    history = history.slice(0,historyIndex+1);
+    history.push(name); historyIndex = history.length-1;
+  }
+  current=name; buildNav(); render();
+  $("back").disabled = historyIndex===0;
+  $("forward").disabled = historyIndex===history.length-1;
+  $("results").style.display="none"; $("search").value="";
+}
+function move(delta) {
+  const i=historyIndex+delta;
+  if(i<0||i>=history.length)return;
+  historyIndex=i; current=history[i]; buildNav(); render();
+  $("back").disabled=historyIndex===0;
+  $("forward").disabled=historyIndex===history.length-1;
+}
+$("back").onclick=()=>move(-1);
+$("forward").onclick=()=>move(1);
+function toggle(key, def=false) {
+  const on=state[key]===undefined?def:state[key];
+  return `<button class="switch ${on?"on":""}" data-toggle="${key}" data-default="${def}" aria-label="${key}" aria-pressed="${on}"></button>`;
+}
+function select(key, options, def) {
+  return `<select class="control" data-select="${key}">${options.map(o=>`<option ${((state[key]??def)===o)?"selected":""}>${o}</option>`).join("")}</select>`;
+}
+function slider(key,value,min=0,max=100) {
+  return `<input class="range" type="range" min="${min}" max="${max}" value="${state[key]??value}" data-range="${key}"><span data-value="${key}">${state[key]??value}%</span>`;
+}
+function row(title,desc,control) {
+  const [,symbol,color]=findItem(current);
+  return `<div class="setting-row"><span class="nav-icon" style="background:${color}">${symbol}</span><div class="setting-copy"><div class="setting-name">${title}</div>${desc?`<div class="setting-desc">${desc}</div>`:""}</div>${control}</div>`;
+}
+function card(title, rows) {
+  return `<div class="section-title">${title}</div><div class="settings-card">${rows.join("")}</div>`;
+}
+function wall(name,style,selected) {
+  return `<button class="wall-card ${selected?"selected":""}" data-wall="${name}"><div class="wall-art ${style}"></div><div class="wall-name">${name}</div></button>`;
+}
+function wallpaper() {
+  const chosen=state.wallpaper||"Golden Gate";
+  return `<div class="wallpaper-top">
+    <div class="hero-art" title="${chosen} wallpaper preview"></div>
+    <div><div class="feature-controls">
+      <div class="feature-line"><span>${chosen}</span>${select("wallStyle",["Light","Dark","Auto"],"Light")}</div>
+      <div class="feature-line"><span>Show on all Spaces</span>${toggle("allSpaces",true)}</div>
+    </div><div class="feature-actions">
+      <button data-go="Screen Saver">Screen Saver…</button>
+      <button data-action="clock">Clock Appearance…</button>
+    </div></div></div>
+    <div class="section-head"><div class="section-title" style="margin:0 0 14px">Dynamic Wallpapers</div><button class="show-all" data-action="dynamic">Show All (35)</button></div>
+    <div class="gallery">
+      ${wall("Golden Gate","gold",chosen==="Golden Gate")}
+      ${wall("Tahoe","tahoe",chosen==="Tahoe")}
+      ${wall("Sequoia","sequoia",chosen==="Sequoia")}
+      ${wall("Macintosh","macintosh",chosen==="Macintosh")}
+    </div>
+    <div class="section-title">Your Photos</div>
+    <button class="photo-tile" data-action="photo">▧⊕<br>Add Photo…</button>
+    <div class="section-head"><div class="section-title">Landscape</div><button class="show-all" data-action="landscape">Show All (81)</button></div>
+    <div class="gallery">
+      ${wall("Golden Gate Sunset","sunset",chosen==="Golden Gate Sunset")}
+      ${wall("Tahoe Day","ocean",chosen==="Tahoe Day")}
+      ${wall("Sequoia Sunrise","forest",chosen==="Sequoia Sunrise")}
+      ${wall("Sonoma Horizon","mountain",chosen==="Sonoma Horizon")}
+    </div>`;
+}
+function render() {
+  $("topTitle").textContent=current;
+  let out="";
+  if(current==="Wallpaper") out=wallpaper();
+  else {
+    const specs={
+      "Wi-Fi":()=>card("Wi-Fi",[
+        row("Wi-Fi","Connect to nearby wireless networks",toggle("wifi",true)),
+        row("Home Network","Connected · Secured",`<button class="action-btn" data-action="network">Details</button>`),
+        row("Ask to join networks","",toggle("askNetworks",true))
+      ]),
+      "Bluetooth":()=>card("Bluetooth",[
+        row("Bluetooth","Discover nearby accessories",toggle("bluetooth",true)),
+        ...["Magic Keyboard","Studio Headphones","iPhone"].map((n,i)=>row(n,i===0?"Connected":"Not Connected",toggle("device"+i,i===0)))
+      ]),
+      "Network":()=>card("Network Services",[
+        row("Wi-Fi","Connected · Home Network","Connected"),
+        row("Firewall","Protect incoming connections",toggle("firewall",true)),
+        row("VPN","Add a VPN configuration",`<button class="action-btn" data-action="vpn">Add VPN…</button>`)
+      ]),
+      "Battery":()=>card("Battery",[
+        row("Battery Level","86% · Power source: Battery","▰ 86%"),
+        row("Low Power Mode","Reduce energy use",toggle("lowPower")),
+        row("Optimized Battery Charging","Reduce battery aging",toggle("optimized",true))
+      ]),
+      "General":()=>card("About",[
+        row("About This Mac","Device and system information",`<button class="action-btn" data-action="about">More Info…</button>`),
+        ...["Software Update","Storage","Date & Time"].map(n=>row(n,descriptions[n],`<button class="action-btn" data-go="${n}">Details ›</button>`))
+      ]),
+      "Appearance":()=>card("Appearance",[
+        row("Appearance","Choose a light or dark appearance",`<div>${["Light","Dark","Auto"].map(n=>`<button class="action-btn" data-theme="${n}">${n}</button>`).join(" ")}</div>`),
+        row("Accent color","",select("accent",["Blue","Purple","Pink","Red","Orange","Yellow","Green","Graphite"],"Blue")),
+        row("Allow wallpaper tinting","",toggle("tint",true))
+      ]),
+      "Displays":()=>card("Display Settings",[
+        row("Resolution","Choose a display resolution",select("resolution",["Default","1920 × 1080","2560 × 1440","Scaled"],"Default")),
+        row("Brightness","",slider("brightness",80)),
+        row("Refresh rate","",select("refresh",["60 Hertz","120 Hertz","ProMotion"],"60 Hertz")),
+        row("Automatically adjust brightness","",toggle("autoBrightness",true))
+      ]),
+      "Desktop & Dock":()=>card("Dock",[
+        row("Size","Adjust Dock icon size",slider("dockSize",50)),
+        row("Magnification","",toggle("magnification")),
+        row("Automatically hide and show the Dock","",toggle("hideDock")),
+        row("Position on screen","",select("dockPosition",["Bottom","Left","Right"],"Bottom"))
+      ]),
+      "Notifications":()=>card("Notification Center",[
+        row("Allow notifications","",toggle("notifications",true)),
+        row("Show previews","",select("previews",["Always","When Unlocked","Never"],"When Unlocked")),
+        ...["Calendar","Mail","Messages","Safari"].map(n=>row(n,"Alerts, sounds, and badges",toggle("notif"+n,true)))
+      ]),
+      "Sound":()=>card("Output",[
+        row("Output device","",select("output",["MacBook Speakers","Studio Display","Headphones"],"MacBook Speakers")),
+        row("Output volume","",slider("volume",65)),
+        row("Mute","",toggle("mute"))
+      ]),
+      "Focus":()=>card("Focus",[
+        ...["Do Not Disturb","Personal","Work","Sleep"].map(n=>row(n,"Choose this Focus",`<button class="action-btn" data-focus="${n}">${(state.focus||"Do Not Disturb")===n?"Selected":"Select"}</button>`)),
+        row("Share Focus Status","",toggle("shareFocus",true))
+      ]),
+      "Screen Saver":()=>card("Screen Saver",[
+        row("Screen saver","",select("screensaver",["Drift","Flurry","Monterey","Sonoma"],"Drift")),
+        row("Start after","",select("saverTime",["Never","5 minutes","10 minutes","20 minutes"],"5 minutes")),
+        row("Show with clock","",toggle("screenClock",true))
+      ]),
+      "Software Update":()=>card("Software Update",[
+        row("macOS Sequoia Demo","Version 15.7 · Up to date",`<button class="action-btn" data-action="update">Check for Updates</button>`),
+        row("Automatically keep my Mac up to date","",toggle("autoUpdate",true))
+      ]),
+      "Accessibility":()=>card("Vision",[
+        row("Text size","Adjust interface text",slider("textSize",100,80,130)),
+        row("Increase contrast","",toggle("contrast")),
+        row("Reduce motion","",toggle("reduceMotion"))
+      ]),
+      "Keyboard":()=>card("Keyboard",[
+        row("Key repeat rate","",slider("keyRepeat",55)),
+        row("Delay until repeat","",slider("keyDelay",35)),
+        row("Keyboard navigation","",toggle("keyboardNav"))
+      ]),
+      "Trackpad":()=>card("Point & Click",[
+        row("Tracking speed","",slider("trackSpeed",65)),
+        row("Tap to click","",toggle("tapClick",true)),
+        row("Natural scrolling","",toggle("naturalScroll",true))
+      ]),
+      "Mouse":()=>card("Point & Click",[
+        row("Tracking speed","",slider("mouseSpeed",60)),
+        row("Secondary click","",select("secondaryClick",["Click right side","Click left side","Off"],"Click right side")),
+        row("Natural scrolling","",toggle("mouseScroll",true))
+      ]),
+      "Storage":()=>card("Storage",[
+        row("Macintosh HD","238.4 GB of 494.4 GB used","24% used"),
+        row("Optimize Storage","",toggle("optimize",true))
+      ])
+    };
+    const generic={
+      "VPN":[["VPN Status","",toggle("vpnStatus")],["Add VPN Configuration","",`<button class="action-btn" data-action="vpn">Add VPN…</button>`]],
+      "Menu Bar":[["Show Wi-Fi in menu bar","",toggle("menuWifi",true)],["Show Bluetooth in menu bar","",toggle("menuBluetooth",true)],["Show Sound in menu bar","",toggle("menuSound",true)]],
+      "Siri":[["Listen for","",select("siriListen",["Off","Siri","Hey Siri"],"Siri")],["Siri suggestions","",toggle("siriSuggest",true)]],
+      "Spotlight":[["Search Applications","",toggle("spotApps",true)],["Search Documents","",toggle("spotDocs",true)],["Search the Web","",toggle("spotWeb",true)]],
+      "Apple Intelligence":[["Apple Intelligence","",toggle("ai",true)],["Writing Tools","",toggle("writing",true)]],
+      "Lock Screen":[["Turn display off on battery","",select("lockBattery",["1 minute","5 minutes","10 minutes","Never"],"5 minutes")],["Require password","",toggle("password",true)]],
+      "Privacy & Security":[["FileVault","",toggle("filevault",true)],["Firewall","",toggle("firewall",true)]],
+      "Touch ID & Password":[["Unlock your Mac","",toggle("touchUnlock",true)],["Use Touch ID for Apple Pay","",toggle("touchPay",true)]],
+      "Users & Groups":[["Danny Rico","Administrator · Current user",`<button class="action-btn" data-action="account">Account Details…</button>`],["Guest User","",toggle("guestUser")]],
+      "Internet Accounts":[["iCloud","",toggle("icloud",true)],["Google","",toggle("google")],["Microsoft Exchange","",toggle("exchange")]],
+      "Game Center":[["Game Center","",toggle("gameCenter",true)],["Nearby players","",toggle("nearbyPlayers",true)]],
+      "Printers & Scanners":[["Default printer","",select("printer",["Select Printer","Office Printer","PDF"],"Select Printer")],["Share this printer","",toggle("sharePrinter")]],
+      "Time Machine":[["Automatic Backups","",toggle("timeMachine",true)],["Backup disk","No disk selected",`<button class="action-btn" data-action="backup">Select Disk…</button>`]],
+      "Date & Time":[["Set time automatically","",toggle("autoTime",true)],["24-hour time","",toggle("24hour")],["Time zone","",select("timezone",["Automatic","Eastern Time","Pacific Time","UTC"],"Eastern Time")]],
+      "Language & Region":[["Preferred language","",select("language",["English (US)","English (UK)","French","Spanish"],"English (US)")],["Region","",select("region",["United States","United Kingdom","Canada","Australia"],"United States")]],
+      "Sharing":[["Screen Sharing","",toggle("screenSharing")],["File Sharing","",toggle("fileSharing")],["Media Sharing","",toggle("mediaSharing")]],
+      "Screen Time":[["App & Website Activity","",toggle("screenTime",true)],["Downtime","",toggle("downtime")]]
+    };
+    if(specs[current]) out=specs[current]();
+    else out=card(current,(generic[current]||[[current,descriptions[current]||"Manage this preference",toggle("enabled_"+current)]]).map(([a,b,c])=>row(a,b,c));
+    out+='<div class="note">This is an interactive visual demo. It does not modify your actual Mac settings.</div>';
+  }
+  $("page").innerHTML=`<h1>${current}</h1><p class="subtitle">${descriptions[current]||"Manage your settings."}</p>`+out;
+  $("page").querySelectorAll("[data-toggle]").forEach(b=>b.onclick=()=>{
+    const k=b.dataset.toggle;
+    state[k]=!(state[k]===undefined?b.dataset.default==="true":state[k]);
+    render();
+  });
+  $("page").querySelectorAll("[data-select]").forEach(s=>s.onchange=()=>{state[s.dataset.select]=s.value;});
+  $("page").querySelectorAll("[data-range]").forEach(s=>s.oninput=()=>{
+    state[s.dataset.range]=+s.value;
+    const v=$("page").querySelector(`[data-value="${s.dataset.range}"]`);
+    if(v)v.textContent=s.value+"%";
+  });
+  $("page").querySelectorAll("[data-wall]").forEach(b=>b.onclick=()=>{state.wallpaper=b.dataset.wall;render();});
+  $("page").querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+  $("page").querySelectorAll("[data-theme]").forEach(b=>b.onclick=()=>document.body.style.background=b.dataset.theme==="Dark"?"#242424":"#111");
+  $("page").querySelectorAll("[data-focus]").forEach(b=>b.onclick=()=>{state.focus=b.dataset.focus;render();});
+  $("page").querySelectorAll("[data-action]").forEach(b=>b.onclick=()=>alert("This is a visual demo. This control does not change real macOS settings."));
+}
+$("search").addEventListener("input",()=>{
+  const q=$("search").value.toLowerCase().trim(),r=$("results");
+  if(!q){r.style.display="none";return;}
+  const matches=items.filter(x=>(x[0]+" "+(descriptions[x[0]]||"")).toLowerCase().includes(q)).slice(0,8);
+  r.innerHTML=matches.map(x=>`<button style="display:block;width:100%;padding:10px;border:0;background:white;text-align:left" data-find="${x[0]}">${x[1]} &nbsp; ${x[0]}</button>`).join("")||'<div style="padding:10px">No settings found</div>';
+  r.style.display="block";
+  r.querySelectorAll("[data-find]").forEach(b=>b.onclick=()=>go(b.dataset.find));
+});
+buildNav();
+render();
+</script>
+</body>
+</html>
