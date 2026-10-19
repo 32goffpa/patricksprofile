@@ -1,1400 +1,591 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>System Settings</title>
-
+<title>Settings</title>
 <style>
 :root {
-  --blue: #3478f6;
-  --sidebar: #ecebea;
-  --text: #1c1c1e;
-  --secondary: #77777b;
-  --card: #f5f5f5;
-  --line: #e5e5e5;
-  --window: #ffffff;
-  --accent: #3478f6;
+  --bg: #f5f5f7;
+  --card: #ffffff;
+  --text: #1d1d1f;
+  --muted: #86868b;
+  --line: #e5e5e8;
+  --hover: #eeeeef;
+  --blue: #007aff;
 }
-
+body.dark {
+  --bg: #000000;
+  --card: #1c1c1e;
+  --text: #f5f5f7;
+  --muted: #98989d;
+  --line: #38383a;
+  --hover: #2c2c2e;
+}
 * { box-sizing: border-box; }
-
 body {
   margin: 0;
-  min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
-    Arial, sans-serif;
+  background: var(--bg);
   color: var(--text);
-  background: #111;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+               "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  transition: background .2s, color .2s;
+  font-size: 14px;
 }
-
-button, input, select {
-  font: inherit;
-}
-
-button { cursor: pointer; }
-
 .app {
-  width: 100%;
-  height: 100vh;
-  min-height: 600px;
-  display: grid;
-  grid-template-columns: 30% 70%;
-  overflow: hidden;
-  background: white;
+  width: min(1050px, 100%);
+  margin: auto;
+  padding: 35px 30px 65px;
 }
-
-.sidebar {
-  background: var(--sidebar);
-  border-right: 1px solid #d2d2d2;
-  padding: 15px 15px 8px;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  overflow: hidden;
+h1 {
+  font-size: 34px;
+  letter-spacing: -1.1px;
+  margin: 0 0 22px;
+  font-weight: 750;
 }
-
-.traffic {
-  height: 62px;
-  display: flex;
-  gap: 14px;
-  padding: 12px 8px;
-  flex-shrink: 0;
-}
-
-.traffic span {
-  height: 22px;
-  width: 22px;
-  border-radius: 50%;
-  display: block;
-}
-
-.red { background: #ff605c; }
-.yellow { background: #ffbd44; }
-.green { background: #00ca4e; }
-
-.search-wrap {
-  position: relative;
-  margin: 13px 0 15px;
-  flex-shrink: 0;
-}
-
 .search {
-  height: 45px;
-  width: 100%;
-  border-radius: 25px;
-  border: 1px solid #d4d4d4;
-  padding: 0 15px;
-  background: linear-gradient(#f9f9f9, #e9e9e9);
-  outline: none;
-  font-size: 17px;
-  box-shadow: inset 0 1px 2px #00000008;
-}
-
-.search:focus {
-  border-color: #9ebcff;
-}
-
-.search-results {
-  display: none;
-  position: absolute;
-  z-index: 30;
-  top: 49px;
-  left: 0;
-  right: 0;
-  background: #fffffff2;
-  backdrop-filter: blur(20px);
-  border: 1px solid #ddd;
-  border-radius: 13px;
-  box-shadow: 0 8px 28px #0002;
-  padding: 5px;
-  max-height: 300px;
-  overflow: auto;
-}
-
-.search-results button {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  border: none;
-  background: transparent;
-  padding: 9px;
-  border-radius: 8px;
-  text-align: left;
-  gap: 10px;
-}
-
-.search-results button:hover {
-  background: #e6e6e6;
-}
-
-.profile {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 5px 10px 20px;
-  flex-shrink: 0;
-}
-
-.avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  background:
-    radial-gradient(ellipse at 50% 100%, #ffdaa0 0%, transparent 65%),
-    linear-gradient(180deg, #66506f 0%, #f6a184 55%, #f7d9a2 100%);
-  border: 1px solid #d0d0d0;
-}
-
-.profile-name {
-  font-weight: 650;
-  font-size: 19px;
-}
-
-.profile-sub {
-  color: #686868;
-  font-size: 16px;
-  margin-top: 3px;
-}
-
-.nav {
-  overflow-y: auto;
-  min-height: 0;
-  scrollbar-width: thin;
-  scrollbar-color: #c7c7c7 transparent;
-}
-
-.nav-group {
-  margin-bottom: 14px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 13px;
   width: 100%;
   height: 43px;
-  padding: 5px 11px;
-  margin: 2px 0;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 13px;
+  margin-bottom: 22px;
+}
+.search span { font-size: 19px; color: var(--muted); }
+.search input {
+  width: 100%;
   border: 0;
-  border-radius: 10px;
-  color: #151515;
+  outline: none;
   background: transparent;
-  text-align: left;
-  font-size: 17px;
-  white-space: nowrap;
-  transition: background .15s, color .15s;
+  color: var(--text);
+  font-size: 15px;
 }
-
-.nav-item:hover { background: #ffffff91; }
-
-.nav-item.active {
-  background: var(--blue);
+.profile {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 17px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 26px;
+  cursor: pointer;
+  border: 1px solid var(--line);
+}
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(160deg,#7bc6ff,#ffb77b 48%,#d66a83 72%,#29264b);
+  display: grid;
+  place-items: center;
   color: white;
-  font-weight: 650;
+  font-size: 27px;
+  box-shadow: inset 0 0 0 1px #ffffff40;
 }
-
-.nav-icon {
+.profile h2 { margin: 0 0 5px; font-size: 20px; }
+.profile p { margin: 0; color: var(--muted); font-size: 13px; }
+.arrow { margin-left: auto; color: var(--muted); font-size: 23px; }
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  align-items: start;
+}
+.section { margin-bottom: 25px; min-width: 0; }
+.section h3 {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 500;
+  margin: 0 0 9px 12px;
+}
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.item {
+  display: flex;
+  min-height: 57px;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 13px;
+  cursor: pointer;
+  position: relative;
+  transition: background .15s;
+}
+.item:hover, .profile:hover { background-color: var(--hover); }
+.item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  height: 1px;
+  background: var(--line);
+  bottom: 0;
+  left: 55px;
+  right: 0;
+}
+.ico {
   width: 30px;
   height: 30px;
-  border-radius: 8px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 20px;
   flex-shrink: 0;
-  box-shadow: inset 0 1px 1px #ffffff45, 0 1px 2px #0002;
-}
-
-.content {
-  min-width: 0;
-  height: 100%;
-  overflow-y: auto;
-  background: white;
-}
-
-.topbar {
-  height: 82px;
-  display: flex;
-  align-items: center;
-  padding: 0 13px;
-  gap: 20px;
-  border-bottom: 1px solid var(--line);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: #ffffffed;
-  backdrop-filter: blur(20px);
-}
-
-.backgroup {
-  height: 54px;
-  width: 118px;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  border: 1px solid #e1e1e1;
-  border-radius: 30px;
-  flex-shrink: 0;
-}
-
-.backgroup button {
-  border: 0;
-  background: transparent;
-  font-size: 34px;
-  line-height: 1;
-  color: #555;
-}
-
-.backgroup button:disabled {
-  color: #c7c7c7;
-  cursor: default;
-}
-
-.page-title {
-  font-size: 24px;
-  font-weight: 700;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.page {
-  padding: 25px 30px 45px;
-}
-
-.page h1 {
-  margin: 0 0 6px;
-  font-size: 27px;
-  letter-spacing: -.5px;
-}
-
-.subtitle {
-  color: var(--secondary);
-  font-size: 14px;
-  margin: 0 0 23px;
-  line-height: 1.5;
-}
-
-.wallpaper-top {
   display: grid;
-  grid-template-columns: minmax(140px, 253px) minmax(0, 1fr);
-  gap: 16px;
-  margin-bottom: 34px;
+  place-items: center;
+  border-radius: 7px;
+  background: var(--icon);
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
 }
-
-.hero-art {
-  min-height: 158px;
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-  background: linear-gradient(145deg, #514743, #e8d7bd 26%, #786e68 42%, #282c45 74%, #a9b7c5);
-}
-
-.hero-art::before {
-  content: "";
-  position: absolute;
-  inset: -25%;
-  background:
-    linear-gradient(145deg, transparent 22%, #f8ead4 25%, #867668 30%,
-    transparent 34%, #dfcfb4 41%, #f9e9d3 44%, #36374a 50%,
-    transparent 56%, #b6c2d1 67%, #34384c 76%);
-  transform: rotate(-7deg);
-}
-
-.hero-art::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, #ffffff08);
-}
-
-.feature-controls {
-  border-radius: 17px;
-  background: #f6f6f6;
-  padding: 0 15px;
-}
-
-.feature-line {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  min-height: 58px;
-  border-bottom: 1px solid #e2e2e2;
-  font-size: 16px;
-}
-
-.feature-line:last-child { border-bottom: none; }
-
-.feature-line select {
-  border: 0;
-  background: transparent;
-  max-width: 100px;
-  padding: 5px;
-}
-
-.feature-actions {
-  display: flex;
-  gap: 9px;
-  justify-content: flex-end;
-  margin-top: 13px;
-  flex-wrap: wrap;
-}
-
-.feature-actions button,
-.action-btn {
-  background: #ededed;
-  border: none;
-  border-radius: 9px;
-  padding: 10px 12px;
-  transition: background .15s;
-}
-
-.feature-actions button:hover,
-.action-btn:hover { background: #dfdfdf; }
-
+.name { font-size: 14px; font-weight: 500; }
+.sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.info { flex: 1; min-width: 0; }
+.value { color: var(--muted); font-size: 13px; text-align: right; }
+.chev { color: var(--muted); font-size: 21px; margin-left: 2px; }
 .switch {
-  width: 56px;
-  height: 29px;
-  border: none;
+  width: 38px;
+  height: 23px;
   border-radius: 20px;
-  background: #d1d1d6;
-  padding: 3px;
+  background: #8e8e93;
+  position: relative;
   flex-shrink: 0;
-  transition: background .18s;
+  transition: .2s;
 }
-
 .switch::after {
   content: "";
-  display: block;
-  width: 23px;
-  height: 23px;
+  width: 19px;
+  height: 19px;
   background: white;
-  border-radius: 50%;
-  box-shadow: 0 1px 3px #0003;
-  transition: transform .18s;
-}
-
-.switch.on { background: #34c759; }
-.switch.on::after { transform: translateX(27px); }
-
-.section-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.section-title {
-  font-size: 19px;
-  font-weight: 650;
-  margin: 30px 0 14px;
-}
-
-.section-head .section-title { margin-top: 0; }
-
-.show-all {
-  color: #818181;
-  border: none;
-  background: transparent;
-  font-size: 14px;
-  white-space: nowrap;
-}
-
-.show-all:hover { color: var(--blue); }
-
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.wall-card {
-  min-width: 0;
-  border: 2px solid transparent;
-  border-radius: 8px;
-  padding: 0;
-  background: white;
-  overflow: hidden;
-  text-align: center;
-  color: #222;
-  transition: transform .16s, border-color .16s;
-}
-
-.wall-card:hover { transform: translateY(-2px); }
-
-.wall-card.selected {
-  border-color: var(--blue);
-}
-
-.wall-art {
-  height: 110px;
-  border-radius: 5px;
-  position: relative;
-  overflow: hidden;
-}
-
-.wall-art::after {
-  content: "";
   position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #ffffff30, transparent 45%, #00000010);
+  left: 2px;
+  top: 2px;
+  border-radius: 50%;
+  transition: .2s;
+  box-shadow: 0 1px 2px #0003;
 }
-
-.gold {
-  background: linear-gradient(145deg, #6e6254, #f3e1c6 24%, #817568 34%, #30364d 62%, #aeb9c8);
-}
-
-.tahoe {
-  background: linear-gradient(180deg, #b1d9ed, #f3d9b2 40%, #52b7db 47%, #1d58b8 75%, #18265c);
-}
-
-.sequoia {
-  background: linear-gradient(125deg, #ffb0b0, #f77d9d 30%, #ef6ca9 42%, #615ad5 70%, #49c3dc);
-}
-
-.macintosh {
-  background: repeating-linear-gradient(135deg, #c8c8ca 0 9px, #8f9096 10px 12px, #ddd 13px 23px);
-}
-
-.sunset {
-  background: linear-gradient(180deg, #7d83a7, #f5b58b 45%, #e6b783 56%, #6c7789 57%, #263b54);
-}
-
-.ocean {
-  background: linear-gradient(180deg, #5792c5, #d6e3e9 43%, #42b4cc 48%, #18547e 78%, #24455f);
-}
-
-.forest {
-  background: repeating-linear-gradient(88deg, #203d32 0 12px, #52785a 13px 19px, #b3a57f 20px 23px, #193b2d 24px 37px);
-}
-
-.mountain {
-  background: linear-gradient(180deg, #a6c7e3, #d9c7ae 43%, #688b78 57%, #314f42 76%);
-}
-
-.wall-name {
-  font-size: 14px;
-  padding: 6px 2px 5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.photo-tile {
-  width: 170px;
-  max-width: 100%;
-  height: 112px;
-  border: 0;
-  border-radius: 8px;
-  background: #f3f3f3;
-  color: #888;
-  font-size: 14px;
-}
-
-.photo-tile:hover { background: #eaeaea; }
-
-.settings-card {
-  border-radius: 15px;
-  overflow: hidden;
-  background: #f6f6f6;
-}
-
-.setting-row {
-  min-height: 65px;
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  padding: 12px 15px;
-  border-bottom: 1px solid #e1e1e1;
-  transition: background .15s;
-}
-
-.setting-row:last-child { border-bottom: 0; }
-.setting-row:hover { background: #ededed; }
-
-.setting-copy { flex: 1; min-width: 0; }
-.setting-name { font-size: 16px; }
-.setting-desc { font-size: 12px; color: #777; margin-top: 4px; }
-
-.control {
-  max-width: 165px;
-  min-width: 80px;
-  border: 1px solid #d6d6d6;
-  border-radius: 8px;
-  background: white;
-  padding: 7px;
-  color: #222;
-}
-
-.range-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.range {
-  width: 100px;
-  accent-color: var(--blue);
-}
-
-.range-value {
-  color: #666;
-  font-size: 12px;
-  min-width: 32px;
-}
-
+.switch.on { background: #34c759; }
+.switch.on::after { left: 17px; }
+.item.toggle-row { cursor: pointer; }
 .note {
-  background: #edf4ff;
-  color: #48628b;
-  border-radius: 10px;
-  padding: 12px;
+  color: var(--muted);
   font-size: 12px;
-  margin-top: 22px;
+  padding: 10px 12px 0;
   line-height: 1.5;
 }
-
-.empty-state {
-  padding: 35px 15px;
-  text-align: center;
-  color: #777;
+.bottom {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 12px;
 }
-
-@media (min-width: 1200px) {
-  .app { grid-template-columns: 340px minmax(0, 1fr); }
+#detail {
+  display: none;
+  margin-top: 0;
+  animation: appear .18s ease;
 }
-
-@media (max-width: 900px) {
-  .app { grid-template-columns: 250px minmax(0, 1fr); }
-  .sidebar { padding-left: 10px; padding-right: 10px; }
-  .nav-item { font-size: 15px; gap: 9px; }
-  .page { padding: 22px 17px 35px; }
-  .wallpaper-top { grid-template-columns: 1fr; }
-  .hero-art { min-height: 140px; }
-  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.detail-head {
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  margin: 5px 0 22px;
 }
-
-@media (max-width: 540px) {
-  .app { grid-template-columns: 60px minmax(0, 1fr); }
-  .sidebar { padding: 8px 5px; }
-  .traffic { padding: 8px 4px; height: 46px; gap: 4px; }
-  .traffic span { width: 12px; height: 12px; }
-  .search { padding: 0 7px; font-size: 12px; }
-  .profile { justify-content: center; padding: 0 0 15px; }
-  .avatar { width: 35px; height: 35px; }
-  .profile-copy, .nav-text { display: none; }
-  .nav-item { justify-content: center; padding: 3px 0; height: 37px; }
-  .nav-icon { width: 28px; height: 28px; font-size: 17px; }
-  .topbar { height: 61px; gap: 9px; padding: 0 8px; }
-  .backgroup { width: 72px; height: 39px; }
-  .page-title { font-size: 18px; }
-  .page { padding: 16px 10px 25px; }
-  .page h1 { font-size: 23px; }
-  .setting-row { padding: 10px 8px; gap: 8px; }
-  .setting-name { font-size: 13px; }
-  .setting-desc { font-size: 11px; }
-  .control { min-width: 65px; max-width: 110px; font-size: 11px; }
-  .range { width: 60px; }
-  .wall-art { height: 78px; }
-  .feature-line { font-size: 13px; }
-  .feature-actions button { font-size: 11px; padding: 8px; }
+.back {
+  border: 0;
+  background: var(--card);
+  color: var(--blue);
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.detail-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: var(--icon, #007aff);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-size: 27px;
+}
+.detail-title { font-size: 28px; font-weight: 750; letter-spacing: -.6px; }
+.detail-desc { color: var(--muted); margin-top: 4px; }
+.detail-content {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 17px;
+  margin-bottom: 18px;
+}
+.detail-content h4 { margin: 0 0 8px; font-size: 15px; }
+.detail-content p { color: var(--muted); line-height: 1.6; margin: 0; }
+.setting-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+}
+.setting-line:last-child { border-bottom: 0; }
+.setting-line select {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px;
+}
+.action {
+  background: var(--blue);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+@keyframes appear {
+  from {opacity:0; transform:translateY(5px)}
+  to {opacity:1; transform:translateY(0)}
+}
+@media(max-width:680px) {
+  .app { padding: 24px 16px 40px; }
+  .layout { grid-template-columns: 1fr; gap: 0; }
+  h1 { font-size: 31px; }
+  .avatar { width: 55px; height: 55px; }
 }
 </style>
 </head>
-
 <body>
 <div class="app">
+  <div id="home">
+    <h1>Settings</h1>
+    <label class="search">
+      <span>⌕</span>
+      <input id="search" placeholder="Search" autocomplete="off">
+      <span id="clearSearch" style="display:none;cursor:pointer">×</span>
+    </label>
 
-  <aside class="sidebar">
-    <div class="traffic">
-      <span class="red"></span>
-      <span class="yellow"></span>
-      <span class="green"></span>
+    <div class="profile" onclick="openSetting('Apple Account')">
+      <div class="avatar">☀</div>
+      <div class="info">
+        <h2>Apple Account</h2>
+        <p>Sign in to manage your account</p>
+      </div>
+      <span class="arrow">›</span>
     </div>
 
-    <div class="search-wrap">
-      <input class="search" id="search" type="search"
-        placeholder="⌕  Search" autocomplete="off">
-      <div class="search-results" id="results"></div>
-    </div>
+    <div class="layout">
+      <div>
+        <section class="section">
+          <h3>Connectivity</h3>
+          <div class="card">
+            <div class="item toggle-row" data-name="Wi-Fi" onclick="toggleRow(this)">
+              <div class="ico" style="--icon:#1685f8">⌁</div>
+              <div class="info"><div class="name">Wi-Fi</div></div>
+              <div class="value">Home Wi-Fi</div>
+              <div class="switch on"></div>
+            </div>
+            <div class="item toggle-row" data-name="Bluetooth" onclick="toggleRow(this)">
+              <div class="ico" style="--icon:#1685f8">ᛒ</div>
+              <div class="info"><div class="name">Bluetooth</div></div>
+              <div class="value">On</div>
+              <div class="switch on"></div>
+            </div>
+            <div class="item" data-name="Cellular" onclick="openSetting('Cellular')">
+              <div class="ico" style="--icon:#34c759">▥</div>
+              <div class="info"><div class="name">Cellular</div></div>
+              <span class="chev">›</span>
+            </div>
+            <div class="item" data-name="Notifications" onclick="openSetting('Notifications')">
+              <div class="ico" style="--icon:#ff3b30">♧</div>
+              <div class="info"><div class="name">Notifications</div></div>
+              <span class="chev">›</span>
+            </div>
+            <div class="item" data-name="Sounds & Haptics" onclick="openSetting('Sounds & Haptics')">
+              <div class="ico" style="--icon:#ff2d55">♫</div>
+              <div class="info"><div class="name">Sounds & Haptics</div></div>
+              <span class="chev">›</span>
+            </div>
+            <div class="item" data-name="Focus" onclick="openSetting('Focus')">
+              <div class="ico" style="--icon:#6854d9">☾</div>
+              <div class="info"><div class="name">Focus</div></div>
+              <span class="chev">›</span>
+            </div>
+          </div>
+        </section>
 
-    <div class="profile">
-      <div class="avatar"></div>
-      <div class="profile-copy">
-        <div class="profile-name">Danny Rico</div>
-        <div class="profile-sub">Apple Account</div>
+        <section class="section">
+          <h3>General</h3>
+          <div class="card">
+            <div class="item" data-name="General" onclick="openSetting('General')">
+              <div class="ico" style="--icon:#8e8e93">⚙</div>
+              <div class="info"><div class="name">General</div></div>
+              <span class="chev">›</span>
+            </div>
+            <div class="item" data-name="Accessibility" onclick="openSetting('Accessibility')">
+              <div class="ico" style="--icon:#007aff">♿</div>
+              <div class="info"><div class="name">Accessibility</div></div>
+              <span class="chev">›</span>
+            </div>
+            <div class="item" data-name="Privacy & Security" onclick="openSetting('Privacy & Security')">
+              <div class="ico" style="--icon:#8e8e93">✋</div>
+              <div class="info"><div class="name">Privacy & Security</div></div>
+              <span class="chev">›</span>
+            </div>
+            <div class="item" data-name="Screen Time" onclick="openSetting('Screen Time')">
+              <div class="ico" style="--icon:#6854d9">◷</div>
+              <div class="info"><div class="name">Screen Time</div></div>
+              <span class="chev">›</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div>
+        <section class="section">
+          <h3>Appearance</h3>
+          <div class="card">
+            <div class="item" data-name="Display & Brightness" onclick="openSetting('Display & Brightness')">
+              <div class="ico" style="--icon:#1685f8">☼</div>
+              <div class="info"><div class="name">Display & Brightness</div></div>
+              <span class="chev">›</span>
+            </div>
+            <div class="item" data-name="Wallpaper" onclick="openSetting('Wallpaper')">
+              <div class="ico" style="--icon:linear-gradient(135deg,#7a5cff,#ff75a0)">◉</div>
+              <div class="info"><div class="name">Wallpaper</div></div>
+              <span class="chev">›</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h3>More Settings</h3>
+          <div class="card">
+            <div class="item" data-name="Battery" onclick="openSetting('Battery')">
+              <div class="ico" style="--icon:#34c759">▰</div>
+              <div class="info"><div class="name">Battery</div></div>
+              <span class="chev">›</span>
+            </div>
+            <div class="item" data-name="Storage" onclick="openSetting('Storage')">
+              <div class="ico" style="--icon:#34c759">▤</div>
+              <div class="info"><div class="name">Storage</div></div>
+              <span class="chev">›</span>
+            </div>
+            <div class="item" data-name="Apps" onclick="openSetting('Apps')">
+              <div class="ico" style="--icon:#007aff">▦</div>
+              <div class="info">
+                <div class="name">Apps</div>
+                <div class="sub">Default apps and app settings</div>
+              </div>
+              <span class="chev">›</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h3>System</h3>
+          <div class="card">
+            <div class="item" data-name="Software Update" onclick="openSetting('Software Update')">
+              <div class="ico" style="--icon:#8e8e93">⇧</div>
+              <div class="info"><div class="name">Software Update</div></div>
+              <span class="chev">›</span>
+            </div>
+            <div class="item" data-name="About" onclick="openSetting('About')">
+              <div class="ico" style="--icon:#8e8e93">ⓘ</div>
+              <div class="info"><div class="name">About</div></div>
+              <span class="chev">›</span>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
+    <div id="noResults" style="display:none;text-align:center;color:var(--muted);padding:30px">No results found</div>
+    <div class="bottom">Settings · All rights reserved</div>
+  </div>
 
-    <nav class="nav" id="nav"></nav>
-  </aside>
-
-  <main class="content" id="content">
-    <header class="topbar">
-      <div class="backgroup">
-        <button id="back" aria-label="Go back" disabled>‹</button>
-        <button id="forward" aria-label="Go forward" disabled>›</button>
+  <div id="detail">
+    <div class="detail-head">
+      <button class="back" onclick="goBack()">‹ Settings</button>
+      <div class="detail-icon" id="detailIcon">⚙</div>
+      <div>
+        <div class="detail-title" id="detailTitle">General</div>
+        <div class="detail-desc" id="detailDesc">Customize your settings</div>
       </div>
-      <div class="page-title" id="topTitle">Wallpaper</div>
-    </header>
-
-    <div class="page" id="page"></div>
-  </main>
-
+    </div>
+    <div id="detailBody"></div>
+  </div>
 </div>
 
 <script>
-"use strict";
-
-/* SETTINGS CATEGORIES */
-
-const groups = [
-  [
-    ["Wi-Fi", "⌁", "#398df3"],
-    ["Bluetooth", "ᛒ", "#398df3"],
-    ["Network", "◎", "#398df3"],
-    ["VPN", "◉", "#398df3"],
-    ["Battery", "▰", "#64c76c"]
-  ],
-  [
-    ["General", "⚙", "#8f9298"],
-    ["Accessibility", "♙", "#378cf3"],
-    ["Appearance", "◐", "#08090a"],
-    ["Desktop & Dock", "▣", "#25272b"],
-    ["Displays", "☼", "#378cf3"],
-    ["Menu Bar", "☷", "#93969c"],
-    ["Siri", "◒", "#777"],
-    ["Spotlight", "⌕", "#92969e"],
-    ["Wallpaper", "❀", "#4cb6e8"],
-    ["Screen Saver", "◌", "#4c9ebc"],
-    ["Notifications", "▣", "#eea13a"],
-    ["Sound", "◖", "#e9a13a"],
-    ["Focus", "◐", "#7766e8"],
-    ["Screen Time", "◷", "#8e70df"],
-    ["Apple Intelligence", "✦", "#8e65d8"],
-    ["Lock Screen", "▣", "#7d8ba1"],
-    ["Privacy & Security", "▤", "#5b9b7a"],
-    ["Touch ID & Password", "◉", "#777d8a"],
-    ["Users & Groups", "♙", "#6f91cf"],
-    ["Internet Accounts", "◎", "#6e9bd4"],
-    ["Game Center", "♧", "#8e70d9"],
-    ["Keyboard", "⌨", "#9296a0"],
-    ["Trackpad", "▱", "#9296a0"],
-    ["Mouse", "⌖", "#9296a0"],
-    ["Printers & Scanners", "▤", "#9296a0"],
-    ["Storage", "▥", "#8e95a1"],
-    ["Time Machine", "◴", "#6b9ad4"],
-    ["Date & Time", "◷", "#858b96"],
-    ["Language & Region", "文", "#9296a0"],
-    ["Sharing", "↗", "#6d9cce"],
-    ["Software Update", "↓", "#5e9dce"]
-  ]
-];
-
 const descriptions = {
-  "Wi-Fi": "Connect to wireless networks.",
-  "Bluetooth": "Connect accessories and nearby devices.",
-  "Network": "Manage network connections and services.",
-  "VPN": "Manage VPN configurations.",
-  "Battery": "View battery and energy settings.",
-  "General": "Manage general system preferences.",
-  "Accessibility": "Customize accessibility features.",
-  "Appearance": "Choose the appearance of your Mac.",
-  "Desktop & Dock": "Customize your desktop and Dock.",
-  "Displays": "Adjust display settings and brightness.",
-  "Menu Bar": "Choose which controls appear in the menu bar.",
-  "Siri": "Configure Siri preferences.",
-  "Spotlight": "Customize search results.",
-  "Wallpaper": "Choose a picture for your desktop.",
-  "Screen Saver": "Choose a screen saver.",
-  "Notifications": "Manage app notifications.",
-  "Sound": "Configure sound input and output.",
-  "Focus": "Choose a Focus mode.",
-  "Screen Time": "Review app and website activity.",
-  "Apple Intelligence": "Manage intelligent features.",
-  "Lock Screen": "Customize lock screen settings.",
-  "Privacy & Security": "Manage permissions and security.",
-  "Touch ID & Password": "Manage authentication settings.",
-  "Users & Groups": "Manage user accounts.",
-  "Internet Accounts": "Manage online accounts.",
-  "Game Center": "Manage gaming preferences.",
-  "Keyboard": "Customize keyboard settings.",
-  "Trackpad": "Configure gestures and tracking.",
-  "Mouse": "Adjust pointer and scrolling.",
-  "Printers & Scanners": "Manage printers and scanners.",
-  "Storage": "Review storage usage.",
-  "Time Machine": "Configure backup preferences.",
-  "Date & Time": "Configure date and time.",
-  "Language & Region": "Choose language and regional formats.",
-  "Sharing": "Choose services to share.",
-  "Photos": "Choose your personal wallpaper photos."
+  "Apple Account":"Manage your account, iCloud and sign-in options.",
+  "Wi-Fi":"Connect to a wireless network.",
+  "Bluetooth":"Connect accessories and nearby devices.",
+  "Cellular":"Manage mobile data and network settings.",
+  "Notifications":"Choose how notifications appear.",
+  "Sounds & Haptics":"Adjust alerts, ringtones and vibrations.",
+  "Focus":"Reduce distractions and manage Focus modes.",
+  "General":"Manage software, device information and system preferences.",
+  "Accessibility":"Customize features for your needs.",
+  "Privacy & Security":"Control app permissions and privacy settings.",
+  "Screen Time":"Review activity and manage usage limits.",
+  "Display & Brightness":"Customize appearance, brightness and text.",
+  "Wallpaper":"Choose a wallpaper for your device.",
+  "Battery":"Review battery usage and power options.",
+  "Storage":"View your device storage.",
+  "Apps":"Manage individual apps and default applications.",
+  "Software Update":"Check for available software updates.",
+  "About":"View device information."
 };
+const icons = {
+  "Apple Account":"☀","Wi-Fi":"⌁","Bluetooth":"ᛒ","Cellular":"▥",
+  "Notifications":"♧","Sounds & Haptics":"♫","Focus":"☾",
+  "General":"⚙","Accessibility":"♿","Privacy & Security":"✋",
+  "Screen Time":"◷","Display & Brightness":"☼","Wallpaper":"◉",
+  "Battery":"▰","Storage":"▤","Apps":"▦","Software Update":"⇧","About":"ⓘ"
+};
+const colors = {
+  "Apple Account":"linear-gradient(160deg,#7bc6ff,#ffb77b,#d66a83)",
+  "Wi-Fi":"#1685f8","Bluetooth":"#1685f8","Cellular":"#34c759",
+  "Notifications":"#ff3b30","Sounds & Haptics":"#ff2d55","Focus":"#6854d9",
+  "General":"#8e8e93","Accessibility":"#007aff","Privacy & Security":"#8e8e93",
+  "Screen Time":"#6854d9","Display & Brightness":"#1685f8","Wallpaper":"#8c6cff",
+  "Battery":"#34c759","Storage":"#34c759","Apps":"#007aff",
+  "Software Update":"#8e8e93","About":"#8e8e93"
+};
+let previousPage = null;
 
-const items = groups.flat();
-const state = { wallpaper: "Golden Gate" };
-let current = "Wallpaper";
-let history = ["Wallpaper"];
-let historyIndex = 0;
-
-const $ = id => document.getElementById(id);
-
-function getItem(name) {
-  return items.find(item => item[0] === name) || [name, "⚙", "#9296a0"];
+function toggleRow(el) {
+  const sw = el.querySelector(".switch");
+  sw.classList.toggle("on");
+  const value = el.querySelector(".value");
+  if(value) value.textContent = sw.classList.contains("on") ?
+    (el.dataset.name === "Wi-Fi" ? "Home Wi-Fi" : "On") : "Off";
 }
-
-/* SIDEBAR */
-
-function buildNav() {
-  $("nav").innerHTML = groups.map(group =>
-    `<div class="nav-group">${group.map(([name, icon, color]) =>
-      `<button class="nav-item ${name === current ? "active" : ""}"
-        data-page="${name}" title="${name}">
-        <span class="nav-icon" style="background:${color}">${icon}</span>
-        <span class="nav-text">${name}</span>
-      </button>`
-    ).join("")}</div>`
-  ).join("");
-
-  $("nav").querySelectorAll("[data-page]").forEach(button => {
-    button.addEventListener("click", () => go(button.dataset.page));
-  });
+function goBack() {
+  document.getElementById("detail").style.display = "none";
+  document.getElementById("home").style.display = "block";
 }
-
-function go(name, addHistory = true) {
-  if (!descriptions[name]) return;
-
-  if (addHistory && name !== current) {
-    history = history.slice(0, historyIndex + 1);
-    history.push(name);
-    historyIndex = history.length - 1;
-  }
-
-  current = name;
-  buildNav();
-  render();
-
-  $("back").disabled = historyIndex === 0;
-  $("forward").disabled = historyIndex === history.length - 1;
-  $("results").style.display = "none";
-  $("search").value = "";
-  $("content").scrollTop = 0;
-}
-
-function moveHistory(direction) {
-  const index = historyIndex + direction;
-  if (index < 0 || index >= history.length) return;
-
-  historyIndex = index;
-  current = history[index];
-  buildNav();
-  render();
-
-  $("back").disabled = historyIndex === 0;
-  $("forward").disabled = historyIndex === history.length - 1;
-  $("content").scrollTop = 0;
-}
-
-$("back").addEventListener("click", () => moveHistory(-1));
-$("forward").addEventListener("click", () => moveHistory(1));
-
-/* REUSABLE SETTINGS CONTROLS */
-
-function toggle(key, defaultValue = false) {
-  const value = state[key] === undefined ? defaultValue : state[key];
-
-  return `<button class="switch ${value ? "on" : ""}"
-    data-toggle="${key}" data-default="${defaultValue}"
-    aria-label="${key}" aria-pressed="${value}"></button>`;
-}
-
-function select(key, options, defaultValue) {
-  const value = state[key] ?? defaultValue;
-
-  return `<select class="control" data-select="${key}">
-    ${options.map(option =>
-      `<option value="${option}" ${value === option ? "selected" : ""}>${option}</option>`
-    ).join("")}
-  </select>`;
-}
-
-function slider(key, defaultValue, min = 0, max = 100) {
-  const value = state[key] ?? defaultValue;
-
-  return `<div class="range-wrap">
-    <input class="range" type="range" min="${min}" max="${max}"
-      value="${value}" data-range="${key}">
-    <span class="range-value" data-value="${key}">${value}%</span>
-  </div>`;
-}
-
-function row(title, description, control) {
-  const [, symbol, color] = getItem(current);
-
-  return `<div class="setting-row">
-    <span class="nav-icon" style="background:${color}">${symbol}</span>
-    <div class="setting-copy">
-      <div class="setting-name">${title}</div>
-      ${description ? `<div class="setting-desc">${description}</div>` : ""}
-    </div>
-    ${control}
-  </div>`;
-}
-
-function card(title, rows) {
-  return `<div class="section-title">${title}</div>
-    <div class="settings-card">${rows.join("")}</div>`;
-}
-
-/* WALLPAPER GALLERIES */
-
-const wallpapers = [
-  ["Golden Gate", "gold"],
-  ["Tahoe", "tahoe"],
-  ["Sequoia", "sequoia"],
-  ["Macintosh", "macintosh"],
-  ["Golden Gate Sunset", "sunset"],
-  ["Tahoe Day", "ocean"],
-  ["Sequoia Sunrise", "forest"],
-  ["Sonoma Horizon", "mountain"]
-];
-
-function wall(name, style) {
-  return `<button class="wall-card ${state.wallpaper === name ? "selected" : ""}"
-    data-wall="${name}" aria-label="Choose ${name} wallpaper">
-    <div class="wall-art ${style}"></div>
-    <div class="wall-name">${name}</div>
-  </button>`;
-}
-
-function wallpaperPage() {
-  const chosen = state.wallpaper || "Golden Gate";
-
-  return `
-    <div class="wallpaper-top">
-      <div class="hero-art" title="${chosen} wallpaper preview"></div>
-
-      <div>
-        <div class="feature-controls">
-          <div class="feature-line">
-            <span>${chosen}</span>
-            ${select("wallStyle", ["Light", "Dark", "Auto"], "Light")}
-          </div>
-          <div class="feature-line">
-            <span>Show on all Spaces</span>
-            ${toggle("allSpaces", true)}
-          </div>
-        </div>
-
-        <div class="feature-actions">
-          <button data-go="Screen Saver">Screen Saver…</button>
-          <button data-action="clock">Clock Appearance…</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-head">
-      <div class="section-title">Dynamic Wallpapers</div>
-      <button class="show-all" data-action="dynamic">Show All (35)</button>
-    </div>
-
-    <div class="gallery">
-      ${wall("Golden Gate", "gold")}
-      ${wall("Tahoe", "tahoe")}
-      ${wall("Sequoia", "sequoia")}
-      ${wall("Macintosh", "macintosh")}
-    </div>
-
-    <div class="section-title">Your Photos</div>
-
-    <button class="photo-tile" data-action="photo">
-      <span style="font-size:30px">▧⊕</span><br>
-      Add Photo…
-    </button>
-
-    <div class="section-head">
-      <div class="section-title">Landscape</div>
-      <button class="show-all" data-action="landscape">Show All (81)</button>
-    </div>
-
-    <div class="gallery">
-      ${wall("Golden Gate Sunset", "sunset")}
-      ${wall("Tahoe Day", "ocean")}
-      ${wall("Sequoia Sunrise", "forest")}
-      ${wall("Sonoma Horizon", "mountain")}
-    </div>
-  `;
-}
-
-/* INDIVIDUAL SETTINGS PAGES */
-
-function getSettingsPage() {
-  const pages = {
-    "Wi-Fi": () => card("Wi-Fi", [
-      row("Wi-Fi", "Connect to wireless networks", toggle("wifi", true)),
-      row("Home Network", "Connected · Secured",
-        `<button class="action-btn" data-action="network">Details…</button>`),
-      row("Ask to join networks", "", toggle("askNetworks", true)),
-      row("Ask to join hotspots", "", toggle("askHotspots", true))
-    ]),
-
-    "Bluetooth": () => card("Bluetooth", [
-      row("Bluetooth", "Discover nearby accessories", toggle("bluetooth", true)),
-      ...["Magic Keyboard", "Studio Headphones", "iPhone"].map((name, index) =>
-        row(name, index === 0 ? "Connected" : "Not Connected",
-          toggle("device" + index, index === 0))
-      )
-    ]),
-
-    "Network": () => card("Network Services", [
-      row("Wi-Fi", "Connected · Home Network",
-        `<button class="action-btn" data-action="network">Details…</button>`),
-      row("Firewall", "Manage incoming connections", toggle("firewall", true)),
-      row("VPN", "Manage VPN configurations",
-        `<button class="action-btn" data-go="VPN">Details…</button>`)
-    ]),
-
-    "VPN": () => card("VPN", [
-      row("VPN Status", "Connect to a VPN", toggle("vpnStatus")),
-      row("VPN Configuration", "No configuration added",
-        `<button class="action-btn" data-action="vpn">Add VPN…</button>`)
-    ]),
-
-    "Battery": () => card("Battery", [
-      row("Battery Level", "86% · Power source: Battery", "86%"),
-      row("Low Power Mode", "Reduce energy use", toggle("lowPower")),
-      row("Optimized Battery Charging", "Reduce battery aging",
-        toggle("optimized", true)),
-      row("Show battery percentage", "", toggle("batteryPercent", true))
-    ]),
-
-    "General": () => card("General", [
-      row("About", "Device and system information",
-        `<button class="action-btn" data-action="about">More Info…</button>`),
-      ...["Software Update", "Storage", "Date & Time", "Language & Region",
-        "Sharing"].map(name =>
-        row(name, descriptions[name],
-          `<button class="action-btn" data-go="${name}">Details ›</button>`)
-      )
-    ]),
-
-    "Appearance": () => card("Appearance", [
-      row("Appearance", "Choose Light, Dark, or Auto",
-        `<div style="display:flex;gap:4px;flex-wrap:wrap">
-          ${["Light", "Dark", "Auto"].map(name =>
-            `<button class="action-btn" data-theme="${name}">${name}</button>`
-          ).join("")}
-        </div>`),
-      row("Accent color", "Choose a highlight color",
-        select("accent", ["Blue", "Purple", "Pink", "Red", "Orange",
-          "Yellow", "Green", "Graphite"], "Blue")),
-      row("Allow wallpaper tinting", "", toggle("tint", true))
-    ]),
-
-    "Displays": () => card("Displays", [
-      row("Resolution", "Choose a display resolution",
-        select("resolution", ["Default", "1920 × 1080",
-          "2560 × 1440", "Scaled"], "Default")),
-      row("Brightness", "", slider("brightness", 80)),
-      row("Refresh rate", "",
-        select("refresh", ["60 Hertz", "120 Hertz", "ProMotion"], "60 Hertz")),
-      row("Automatically adjust brightness", "", toggle("autoBrightness", true)),
-      row("True Tone", "Adapt colors to ambient lighting", toggle("trueTone"))
-    ]),
-
-    "Desktop & Dock": () => card("Dock", [
-      row("Size", "Adjust Dock icon size", slider("dockSize", 50)),
-      row("Magnification", "", toggle("magnification")),
-      row("Automatically hide and show the Dock", "", toggle("hideDock")),
-      row("Position on screen", "",
-        select("dockPosition", ["Bottom", "Left", "Right"], "Bottom")),
-      row("Show recent applications", "", toggle("recentApps", true))
-    ]),
-
-    "Menu Bar": () => card("Menu Bar", [
-      row("Show Wi-Fi in menu bar", "", toggle("menuWifi", true)),
-      row("Show Bluetooth in menu bar", "", toggle("menuBluetooth", true)),
-      row("Show Sound in menu bar", "", toggle("menuSound", true)),
-      row("Automatically hide menu bar",
-        "", select("hideMenu", ["Never", "Always", "In Full Screen"], "Never"))
-    ]),
-
-    "Siri": () => card("Siri", [
-      row("Enable Siri", "", toggle("siri", true)),
-      row("Listen for", "", select("siriListen", ["Off", "Siri", "Hey Siri"], "Siri")),
-      row("Show Siri in menu bar", "", toggle("siriMenu", true))
-    ]),
-
-    "Spotlight": () => card("Spotlight", [
-      row("Applications", "Include applications in search", toggle("spotApps", true)),
-      row("Documents", "Include documents in search", toggle("spotDocs", true)),
-      row("Web search", "Include web search results", toggle("spotWeb", true)),
-      row("Search privacy", "", `<button class="action-btn" data-action="privacy">Configure…</button>`)
-    ]),
-
-    "Screen Saver": () => card("Screen Saver", [
-      row("Screen saver", "",
-        select("screensaver", ["Drift", "Flurry", "Monterey", "Sonoma"], "Drift")),
-      row("Start after", "",
-        select("saverTime", ["Never", "5 minutes", "10 minutes",
-          "20 minutes"], "5 minutes")),
-      row("Show with clock", "", toggle("screenClock", true))
-    ]),
-
-    "Notifications": () => card("Notifications", [
-      row("Allow notifications", "", toggle("notifications", true)),
-      row("Show previews", "",
-        select("previews", ["Always", "When Unlocked", "Never"], "When Unlocked")),
-      ...["Calendar", "Mail", "Messages", "Safari"].map(name =>
-        row(name, "Allow alerts and sounds", toggle("notif" + name, true))
-      )
-    ]),
-
-    "Sound": () => card("Sound", [
-      row("Output device", "",
-        select("output", ["MacBook Speakers", "Studio Display",
-          "Headphones"], "MacBook Speakers")),
-      row("Output volume", "", slider("volume", 65)),
-      row("Mute", "", toggle("mute")),
-      row("Play sound on startup", "", toggle("startupSound", true))
-    ]),
-
-    "Focus": () => card("Focus", [
-      ...["Do Not Disturb", "Personal", "Work", "Sleep"].map(name =>
-        row(name, "Choose this Focus",
-          `<button class="action-btn" data-focus="${name}">
-            ${(state.focus || "Do Not Disturb") === name ? "Selected" : "Select"}
-          </button>`)
-      ),
-      row("Share Focus Status", "", toggle("shareFocus", true))
-    ]),
-
-    "Screen Time": () => card("Screen Time", [
-      row("App & Website Activity", "", toggle("screenTime", true)),
-      row("Downtime", "Schedule time away from the screen", toggle("downtime")),
-      row("Share across devices", "", toggle("shareScreenTime"))
-    ]),
-
-    "Apple Intelligence": () => card("Apple Intelligence", [
-      row("Apple Intelligence", "Toggle demo preferences", toggle("ai", true)),
-      row("Writing Tools", "", toggle("writing", true)),
-      row("Notification summaries", "", toggle("summaries", true))
-    ]),
-
-    "Lock Screen": () => card("Lock Screen", [
-      row("Turn display off on battery", "",
-        select("lockBattery", ["1 minute", "5 minutes", "10 minutes", "Never"], "5 minutes")),
-      row("Require password", "", toggle("password", true)),
-      row("Show clock", "", toggle("lockClock", true))
-    ]),
-
-    "Privacy & Security": () => card("Privacy & Security", [
-      row("FileVault", "Disk encryption", toggle("filevault", true)),
-      row("Firewall", "Protect incoming connections", toggle("firewall", true)),
-      row("Location Services", "", toggle("locationServices", true)),
-      row("Analytics & Improvements", "", toggle("analytics"))
-    ]),
-
-    "Touch ID & Password": () => card("Touch ID & Password", [
-      row("Unlock your Mac", "", toggle("touchUnlock", true)),
-      row("Use Touch ID for Apple Pay", "", toggle("touchPay", true)),
-      row("Automatic login", "", toggle("autoLogin"))
-    ]),
-
-    "Users & Groups": () => card("Users & Groups", [
-      row("Danny Rico", "Administrator · Current user",
-        `<button class="action-btn" data-action="account">Account Details…</button>`),
-      row("Guest User", "", toggle("guestUser")),
-      row("Add User", "Create another user",
-        `<button class="action-btn" data-action="addUser">Add User…</button>`)
-    ]),
-
-    "Internet Accounts": () => card("Internet Accounts", [
-      row("iCloud", "Account synchronization", toggle("icloud", true)),
-      row("Google", "Mail, contacts, and calendars", toggle("google")),
-      row("Microsoft Exchange", "Work account", toggle("exchange")),
-      row("Add Account", "", `<button class="action-btn" data-action="account">Add Account…</button>`)
-    ]),
-
-    "Game Center": () => card("Game Center", [
-      row("Game Center", "", toggle("gameCenter", true)),
-      row("Nearby Players", "", toggle("nearbyPlayers", true))
-    ]),
-
-    "Keyboard": () => card("Keyboard", [
-      row("Key repeat rate", "", slider("keyRepeat", 55)),
-      row("Delay until repeat", "", slider("keyDelay", 35)),
-      row("Keyboard navigation", "", toggle("keyboardNav")),
-      row("Adjust keyboard brightness", "", toggle("keyboardBrightness"))
-    ]),
-
-    "Trackpad": () => card("Trackpad", [
-      row("Tracking speed", "", slider("trackSpeed", 65)),
-      row("Tap to click", "", toggle("tapClick", true)),
-      row("Natural scrolling", "", toggle("naturalScroll", true)),
-      row("Secondary click", "", toggle("secondaryClick", true))
-    ]),
-
-    "Mouse": () => card("Mouse", [
-      row("Tracking speed", "", slider("mouseSpeed", 60)),
-      row("Secondary click", "",
-        select("secondaryClickSide", ["Click right side", "Click left side", "Off"], "Click right side")),
-      row("Natural scrolling", "", toggle("mouseScroll", true))
-    ]),
-
-    "Printers & Scanners": () => card("Printers & Scanners", [
-      row("Default printer", "",
-        select("printer", ["Select Printer", "Office Printer", "PDF"], "Select Printer")),
-      row("Share this printer", "", toggle("sharePrinter")),
-      row("Add Printer", "", `<button class="action-btn" data-action="printer">Add Printer…</button>`)
-    ]),
-
-    "Storage": () => card("Storage", [
-      row("Macintosh HD", "238.4 GB of 494.4 GB used", "48% used"),
-      row("Optimize Storage", "", toggle("optimize", true)),
-      row("Empty Trash automatically", "", toggle("emptyTrash"))
-    ]),
-
-    "Time Machine": () => card("Time Machine", [
-      row("Automatic Backups", "", toggle("timeMachine", true)),
-      row("Backup disk", "No disk selected",
-        `<button class="action-btn" data-action="backup">Select Disk…</button>`)
-    ]),
-
-    "Date & Time": () => card("Date & Time", [
-      row("Set time automatically", "", toggle("autoTime", true)),
-      row("24-hour time", "", toggle("24hour")),
-      row("Time zone", "",
-        select("timezone", ["Automatic", "Eastern Time", "Pacific Time", "UTC"], "Eastern Time"))
-    ]),
-
-    "Language & Region": () => card("Language & Region", [
-      row("Preferred language", "",
-        select("language", ["English (US)", "English (UK)", "French", "Spanish"], "English (US)")),
-      row("Region", "",
-        select("region", ["United States", "United Kingdom", "Canada", "Australia"], "United States")),
-      row("Temperature", "", select("temperature", ["Fahrenheit", "Celsius"], "Fahrenheit"))
-    ]),
-
-    "Sharing": () => card("Sharing", [
-      row("Screen Sharing", "", toggle("screenSharing")),
-      row("File Sharing", "", toggle("fileSharing")),
-      row("Media Sharing", "", toggle("mediaSharing")),
-      row("Bluetooth Sharing", "", toggle("bluetoothSharing"))
-    ]),
-
-    "Software Update": () => card("Software Update", [
-      row("macOS Sequoia Demo", "Version 15.7 · Demo status",
-        `<button class="action-btn" data-action="update">Check for Updates</button>`),
-      row("Automatically keep my Mac up to date", "", toggle("autoUpdate", true))
-    ])
+function openSetting(name) {
+  previousPage = name;
+  document.getElementById("home").style.display = "none";
+  document.getElementById("detail").style.display = "block";
+  document.getElementById("detailTitle").textContent = name;
+  document.getElementById("detailDesc").textContent = descriptions[name] || "Customize your settings";
+  const icon = document.getElementById("detailIcon");
+  icon.textContent = icons[name] || "⚙";
+  icon.style.background = colors[name] || "#007aff";
+  const body = document.getElementById("detailBody");
+  body.innerHTML = "";
+
+  const panel = document.createElement("div");
+  panel.className = "detail-content";
+  const heading = document.createElement("h4");
+  heading.textContent = name;
+  const paragraph = document.createElement("p");
+  paragraph.textContent = descriptions[name] || "Explore available options for this section.";
+  panel.append(heading, paragraph);
+  body.appendChild(panel);
+
+  const options = {
+    "Apple Account":[["Personal Information","Manage your name and details"],["Sign-In & Security","Password and account security"],["iCloud","Photos, files and backups"],["Media & Purchases","Manage purchases"]],
+    "General":[["About","Device information"],["Software Update","Check for updates"],["Date & Time","Time zone and clock"],["Keyboard","Keyboard settings"],["Language & Region","Language preferences"],["Reset","Reset options"]],
+    "Display & Brightness":[["Appearance","Choose Light or Dark"],["Brightness","Adjust screen brightness"],["Text Size","Adjust interface text"],["Auto-Lock","Choose screen timeout"]],
+    "Wi-Fi":[["Wi-Fi","Turn Wi-Fi on or off"],["Available Networks","Select a wireless network"]],
+    "Bluetooth":[["Bluetooth","Turn Bluetooth on or off"],["My Devices","Manage connected devices"]],
+    "Apps":[["Default Apps","Choose default applications"],["Installed Apps","Manage app preferences"],["App Permissions","Review permissions"]],
+    "Privacy & Security":[["Location Services","Manage location access"],["Tracking","Control app tracking"],["Photos","Manage photo permissions"],["Microphone","Manage microphone access"]],
+    "Notifications":[["Notification Style","Choose alert presentation"],["Scheduled Summary","Manage notification summaries"]],
+    "Focus":[["Do Not Disturb","Reduce interruptions"],["Personal","Personal Focus settings"],["Sleep","Sleep Focus settings"]],
+    "Battery":[["Battery Percentage","Show battery percentage"],["Low Power Mode","Reduce power consumption"]],
+    "Storage":[["Used Storage","Review space usage"],["Recommendations","Storage suggestions"]],
+    "Screen Time":[["App & Website Activity","Review activity"],["Downtime","Schedule breaks"],["App Limits","Set usage limits"]],
+    "Wallpaper":[["Current Wallpaper","Choose a wallpaper"],["Add New Wallpaper","Explore wallpaper styles"]],
+    "Accessibility":[["Display & Text Size","Visual preferences"],["Touch","Touch accommodations"],["Motion","Motion preferences"]],
+    "Software Update":[["Automatic Updates","Manage automatic updates"],["Beta Updates","Beta update preferences"]],
+    "Cellular":[["Cellular Data","Manage mobile data"],["Data Options","Network preferences"]],
+    "Sounds & Haptics":[["Ringtone","Choose a ringtone"],["Alert Volume","Adjust alert volume"],["Haptics","Vibration settings"]],
+    "About":[["Device Name","Customize device name"],["Software Version","Installed software"],["Model Name","Device model"]],
+    "Storage":[["Used Storage","Review space usage"],["Recommendations","Storage suggestions"]]
   };
+  const items = options[name] || [["Preferences","Manage options for "+name],["Permissions","Review available permissions"]];
+  const card = document.createElement("div");
+  card.className = "detail-content";
+  items.forEach(([title, subtitle]) => {
+    const line = document.createElement("div");
+    line.className = "setting-line";
+    const textWrap = document.createElement("div");
+    const strong = document.createElement("div");
+    strong.textContent = title;
+    const small = document.createElement("div");
+    small.className = "sub";
+    small.textContent = subtitle;
+    textWrap.append(strong, small);
+    line.appendChild(textWrap);
 
-  if (pages[current]) return pages[current]();
-
-  return card(current, [
-    row(current, descriptions[current] || "Manage this preference.",
-      toggle("enabled_" + current)),
-    row("Show in menu bar", "", toggle("show_" + current)),
-    row("Notifications", "", toggle("notifications_" + current))
-  ]);
+    if(title === "Appearance") {
+      const select = document.createElement("select");
+      select.innerHTML = '<option>Light</option><option>Dark</option><option>Auto</option>';
+      select.value = document.body.classList.contains("dark") ? "Dark" : "Light";
+      select.onchange = () => setAppearance(select.value);
+      line.appendChild(select);
+    } else if (["Brightness","Alert Volume","Text Size"].includes(title)) {
+      const input = document.createElement("input");
+      input.type = "range";
+      input.min = 0; input.max = 100; input.value = 75;
+      input.style.width = "115px";
+      line.appendChild(input);
+    } else {
+      const btn = document.createElement("button");
+      btn.className = "action";
+      btn.textContent = title === "Software Update" ? "Check" :
+                        title === "Add New Wallpaper" ? "Choose" : "Open";
+      btn.onclick = () => {
+        if(title === "Software Update" || name === "Software Update") {
+          btn.textContent = "Up to date";
+          paragraph.textContent = "This demo cannot check Apple's actual update servers.";
+        } else {
+          btn.textContent = "Selected";
+          small.textContent = subtitle + " · Selected";
+        }
+      };
+      line.appendChild(btn);
+    }
+    card.appendChild(line);
+  });
+  body.appendChild(card);
 }
-
-/* RENDER THE CURRENT PAGE */
-
-function render() {
-  $("topTitle").textContent = current;
-
-  let output = "";
-
-  if (current === "Wallpaper") {
-    output = wallpaperPage();
+function setAppearance(value) {
+  if(value === "Auto") {
+    document.body.classList.toggle("dark", window.matchMedia("(prefers-color-scheme: dark)").matches);
   } else {
-    output = getSettingsPage();
-
-    output += `<div class="note">
-      Interactive website demo. These controls change the visual demo only;
-      they do not change settings on your actual Mac.
-    </div>`;
+    document.body.classList.toggle("dark", value === "Dark");
   }
-
-  $("page").innerHTML = `
-    <h1>${current}</h1>
-    <p class="subtitle">${descriptions[current] || "Manage your settings."}</p>
-    ${output}
-  `;
-
-  attachEvents();
 }
-
-/* INTERACTIVE CONTROLS */
-
-function attachEvents() {
-  $("page").querySelectorAll("[data-toggle]").forEach(button => {
-    button.addEventListener("click", () => {
-      const key = button.dataset.toggle;
-      const defaultValue = button.dataset.default === "true";
-      const currentValue = state[key] === undefined
-        ? defaultValue
-        : state[key];
-
-      state[key] = !currentValue;
-      render();
-    });
+document.getElementById("search").addEventListener("input", function() {
+  const query = this.value.trim().toLowerCase();
+  document.getElementById("clearSearch").style.display = query ? "block" : "none";
+  let count = 0;
+  document.querySelectorAll("#home .item, #home .profile").forEach(el => {
+    const name = (el.dataset.name || el.innerText).toLowerCase();
+    const matches = name.includes(query);
+    el.style.display = matches ? "flex" : "none";
+    if(matches) count++;
   });
-
-  $("page").querySelectorAll("[data-select]").forEach(selectBox => {
-    selectBox.addEventListener("change", () => {
-      state[selectBox.dataset.select] = selectBox.value;
-
-      if (selectBox.dataset.select === "wallStyle") {
-        render();
-      }
-    });
+  document.querySelectorAll("#home .section").forEach(section => {
+    const visible = [...section.querySelectorAll(".item")].some(el => el.style.display !== "none");
+    section.style.display = visible ? "block" : "none";
   });
-
-  $("page").querySelectorAll("[data-range]").forEach(range => {
-    range.addEventListener("input", () => {
-      state[range.dataset.range] = Number(range.value);
-
-      const value = $("page").querySelector(
-        `[data-value="${range.dataset.range}"]`
-      );
-
-      if (value) value.textContent = range.value + "%";
-    });
-  });
-
-  $("page").querySelectorAll("[data-wall]").forEach(button => {
-    button.addEventListener("click", () => {
-      state.wallpaper = button.dataset.wall;
-      render();
-    });
-  });
-
-  $("page").querySelectorAll("[data-go]").forEach(button => {
-    button.addEventListener("click", () => go(button.dataset.go));
-  });
-
-  $("page").querySelectorAll("[data-theme]").forEach(button => {
-    button.addEventListener("click", () => {
-      const theme = button.dataset.theme;
-
-      if (theme === "Dark") {
-        document.documentElement.style.setProperty("--sidebar", "#29292b");
-        document.documentElement.style.setProperty("--text", "#f5f5f7");
-        document.documentElement.style.setProperty("--secondary", "#aaa");
-        document.documentElement.style.setProperty("--card", "#333336");
-        document.documentElement.style.setProperty("--line", "#444");
-        document.documentElement.style.setProperty("--window", "#222");
-        $("content").style.background = "#222";
-        $("page").style.background = "#222";
-        $("page").style.color = "#f5f5f7";
-        document.querySelectorAll(".settings-card").forEach(card => {
-          card.style.background = "#333336";
-        });
-      } else {
-        document.documentElement.style.setProperty("--sidebar", "#ecebea");
-        document.documentElement.style.setProperty("--text", "#1c1c1e");
-        document.documentElement.style.setProperty("--secondary", "#77777b");
-        document.documentElement.style.setProperty("--card", "#f5f5f5");
-        document.documentElement.style.setProperty("--line", "#e5e5e5");
-        document.documentElement.style.setProperty("--window", "#ffffff");
-        $("content").style.background = "white";
-        $("page").style.background = "white";
-        $("page").style.color = "#1c1c1e";
-        document.querySelectorAll(".settings-card").forEach(card => {
-          card.style.background = "#f6f6f6";
-        });
-      }
-
-      if (theme === "Auto") {
-        document.documentElement.style.setProperty("--sidebar", "#ecebea");
-      }
-    });
-  });
-
-  $("page").querySelectorAll("[data-focus]").forEach(button => {
-    button.addEventListener("click", () => {
-      state.focus = button.dataset.focus;
-      render();
-    });
-  });
-
-  $("page").querySelectorAll("[data-action]").forEach(button => {
-    button.addEventListener("click", () => handleAction(button.dataset.action));
-  });
-}
-
-function handleAction(action) {
-  const messages = {
-    clock: "Clock Appearance settings demo.",
-    dynamic: "All dynamic wallpaper previews are shown in this demo.",
-    landscape: "All landscape wallpaper previews are shown in this demo.",
-    photo: "To use a real photo, add an image file to your repository and connect it to the wallpaper preview.",
-    network: "Network details demo.",
-    vpn: "VPN configuration demo.",
-    about: "About This Mac · macOS Sequoia Demo.",
-    privacy: "Search privacy settings demo.",
-    account: "Account management demo.",
-    addUser: "User creation demo.",
-    printer: "Printer management demo.",
-    backup: "Choose a backup disk demo.",
-    update: "Your demo is up to date!",
-    "enabled": "Setting updated."
-  };
-
-  alert(messages[action] || "This is a visual settings demo. This control does not change real macOS settings.");
-}
-
-/* LIVE SEARCH */
-
-$("search").addEventListener("input", () => {
-  const query = $("search").value.trim().toLowerCase();
-  const results = $("results");
-
-  if (!query) {
-    results.style.display = "none";
-    return;
-  }
-
-  const matches = items.filter(item =>
-    (item[0] + " " + (descriptions[item[0]] || ""))
-      .toLowerCase()
-      .includes(query)
-  ).slice(0, 9);
-
-  if (!matches.length) {
-    results.innerHTML = `<div class="empty-state">No settings found</div>`;
-  } else {
-    results.innerHTML = matches.map(([name, symbol, color]) =>
-      `<button data-find="${name}">
-        <span class="nav-icon" style="background:${color}">${symbol}</span>
-        <span>${name}</span>
-      </button>`
-    ).join("");
-  }
-
-  results.style.display = "block";
-
-  results.querySelectorAll("[data-find]").forEach(button => {
-    button.addEventListener("click", () => go(button.dataset.find));
-  });
+  document.getElementById("noResults").style.display = count ? "none" : "block";
 });
-
-document.addEventListener("click", event => {
-  if (!event.target.closest(".search-wrap")) {
-    $("results").style.display = "none";
-  }
-});
-
-/* STARTUP */
-
-buildNav();
-render();
-
+document.getElementById("clearSearch").onclick = () => {
+  document.getElementById("search").value = "";
+  document.getElementById("search").dispatchEvent(new Event("input"));
+};
 </script>
 </body>
 </html>
